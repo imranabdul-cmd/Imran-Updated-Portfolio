@@ -68,20 +68,21 @@ export const TimeTravelWarp: React.FC<TimeTravelWarpProps> = ({ isActive, onUnlo
 
     let animId: number;
     const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-    const width = window.innerWidth;
-    const height = window.innerHeight;
+    // Expand dimensions by 130% to accommodate screen shake / vortex transformations without edge gaps
+    const width = Math.ceil(window.innerWidth * 1.3);
+    const height = Math.ceil(window.innerHeight * 1.3);
 
     canvas.width = Math.floor(width * dpr);
     canvas.height = Math.floor(height * dpr);
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
 
     ctx.scale(dpr, dpr);
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = 'high';
 
     const stars: Array<{ x: number; y: number; z: number; pz: number; color: string; coreColor: string }> = [];
-    const numStars = 550;
+    const numStars = 650;
 
     const palette = [
       { aura: 'rgba(6, 182, 212,', core: '#e0f2fe' },   // Electric Cyan
@@ -136,8 +137,8 @@ export const TimeTravelWarp: React.FC<TimeTravelWarpProps> = ({ isActive, onUnlo
         const prevX = s.x * pk + cx;
         const prevY = s.y * pk + cy;
 
-        // Skip if outside viewport bounds
-        if (px < -50 || px > width + 50 || py < -50 || py > height + 50) continue;
+        // Skip if outside extended canvas bounds
+        if (px < -100 || px > width + 100 || py < -100 || py > height + 100) continue;
 
         const depthPct = 1 - s.z / width;
         const size = Math.max(1, depthPct * 4.5);
@@ -192,7 +193,10 @@ export const TimeTravelWarp: React.FC<TimeTravelWarpProps> = ({ isActive, onUnlo
       {phase === 'warp' && (
         <div style={{
           position: 'absolute',
-          inset: 0,
+          top: '-15%',
+          left: '-15%',
+          width: '130%',
+          height: '130%',
           animation: 'warp-screen-shake 1.5s cubic-bezier(0.3, 0, 0.2, 1) forwards',
           transformOrigin: 'center center',
           overflow: 'hidden',
@@ -201,10 +205,9 @@ export const TimeTravelWarp: React.FC<TimeTravelWarpProps> = ({ isActive, onUnlo
             ref={canvasRef}
             style={{
               position: 'absolute',
-              top: '-5%',
-              left: '-5%',
-              width: '110%',
-              height: '110%',
+              inset: 0,
+              width: '100%',
+              height: '100%',
               display: 'block',
               animation: 'warp-vortex 1.5s cubic-bezier(0.7, 0, 1, 1) forwards',
             }}
