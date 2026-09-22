@@ -151,16 +151,19 @@ export const Experience: React.FC = () => {
           borderRadius: 20,
           overflow: 'hidden',
           border: '1px solid rgba(255,255,255,0.14)',
-          background: 'rgba(255,255,255,0.02)',
+          background: 'rgba(8, 14, 28, 0.95)',
           boxShadow: '0 20px 50px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2)',
         }}>
           <div
             style={{
               position: 'relative',
               width: '100%',
-              maxHeight: 460,
-              overflow: 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: '#040711',
               cursor: 'pointer',
+              padding: '12px 12px 0 12px',
             }}
             onClick={() => setPhotoExpanded(true)}
           >
@@ -169,66 +172,66 @@ export const Experience: React.FC = () => {
               alt="Mission Possible Hackathon Champions - Owlsure"
               style={{
                 width: '100%',
-                height: '100%',
-                maxHeight: 460,
-                objectFit: 'cover',
-                objectPosition: 'center 35%',
+                height: 'auto',
+                maxHeight: '680px',
+                objectFit: 'contain',
+                borderRadius: 14,
                 display: 'block',
-                transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+                transition: 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
               }}
-              onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.03)')}
+              onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.015)')}
               onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
             />
+          </div>
 
-            {/* Bottom Glass Caption Overlay */}
-            <div style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              padding: '24px 24px 18px',
-              background: 'linear-gradient(to top, rgba(3,7,18,0.92) 0%, rgba(3,7,18,0.5) 65%, transparent 100%)',
-              display: 'flex',
-              alignItems: 'flex-end',
-              justifyContent: 'space-between',
-              flexWrap: 'wrap',
-              gap: 12,
-            }}>
-              <div>
-                <p style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: 11,
-                  fontWeight: 600,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  color: 'var(--amber)',
-                  marginBottom: 3,
-                }}>
-                  🏆 Victory Ceremony · Owlsure
-                </p>
-                <p style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: 13.5,
-                  fontWeight: 400,
-                  color: '#fff',
-                }}>
-                  Team Champions receiving 1st Place Trophy for ClanSure &amp; GT Companion
-                </p>
-              </div>
-
-              <div
-                className="ios-glass-pill"
-                style={{
-                  padding: '6px 14px',
-                  fontSize: 11,
-                  color: 'rgba(255,255,255,0.9)',
-                  background: 'rgba(255,255,255,0.1)',
-                  borderColor: 'rgba(255,255,255,0.25)',
-                }}
-              >
-                <Eye size={12} /> Click to expand
-              </div>
+          {/* Bottom Glass Caption Bar */}
+          <div style={{
+            padding: '18px 24px 20px',
+            background: 'rgba(3, 7, 18, 0.95)',
+            borderTop: '1px solid rgba(255,255,255,0.08)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 12,
+          }}>
+            <div>
+              <p style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 11,
+                fontWeight: 600,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: 'var(--amber)',
+                marginBottom: 3,
+              }}>
+                🏆 Victory Ceremony · Owlsure
+              </p>
+              <p style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: 13.5,
+                fontWeight: 400,
+                color: '#fff',
+                margin: 0,
+              }}>
+                Team Champions receiving 1st Place Trophy for ClanSure &amp; GT Companion
+              </p>
             </div>
+
+            <button
+              onClick={() => setPhotoExpanded(true)}
+              className="ios-glass-pill"
+              style={{
+                cursor: 'pointer',
+                padding: '7px 16px',
+                fontSize: 11.5,
+                color: 'rgba(255,255,255,0.9)',
+                background: 'rgba(255,255,255,0.08)',
+                borderColor: 'rgba(255,255,255,0.2)',
+              }}
+            >
+              <Eye size={13} style={{ color: '#06b6d4' }} /> View Fullscreen
+            </button>
           </div>
         </div>
 

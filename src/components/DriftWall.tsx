@@ -311,8 +311,10 @@ const DriftWall = ({
                           display: 'block',
                           textDecoration: 'none',
                           cursor: item.href ? 'pointer' : 'default',
-                          transform: isActive ? `translateY(-${lift}px) scale(1.04)` : 'translateY(0) scale(1)',
-                          transition: 'transform 0.4s cubic-bezier(.16,1,.3,1), filter 0.3s ease, opacity 0.3s ease',
+                          background: '#ffffff',
+                          border: '1px solid rgba(255, 255, 255, 0.2)',
+                          transform: isActive ? `translateY(-${lift}px) scale(1.08)` : 'translateY(0) scale(1)',
+                          transition: 'transform 0.35s cubic-bezier(.16,1,.3,1), filter 0.3s ease, opacity 0.3s ease',
                           filter: [
                             isActive ? '' : (activeId ? `brightness(${1 - dim})` : ''),
                             grayscale && !isActive ? 'grayscale(100%)' : '',
@@ -320,45 +322,24 @@ const DriftWall = ({
                           opacity: !activeId || isActive ? 1 : fade,
                           zIndex: isActive ? 10 : 1,
                           boxShadow: isActive
-                            ? '0 24px 60px rgba(0,0,0,0.7)'
-                            : '0 4px 16px rgba(0,0,0,0.4)',
+                            ? '0 24px 60px rgba(0,0,0,0.85), 0 0 0 2px rgba(6,182,212,0.6)'
+                            : '0 8px 24px rgba(0,0,0,0.45)',
                         }}
                       >
                         <img
                           src={item.image}
                           alt={item.title ?? ''}
-                          loading="lazy"
+                          loading="eager"
                           style={{
                             width: '100%',
                             height: '100%',
-                            objectFit: 'cover',
+                            objectFit: 'contain',
                             display: 'block',
                             pointerEvents: 'none',
                             userSelect: 'none',
+                            background: '#ffffff',
                           }}
                         />
-                        {/* title overlay */}
-                        {item.title && (
-                          <div style={{
-                            position: 'absolute',
-                            bottom: 0, left: 0, right: 0,
-                            background: 'linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)',
-                            padding: '12px 12px 10px',
-                            opacity: isActive ? 1 : 0,
-                            transform: isActive ? 'translateY(0)' : 'translateY(6px)',
-                            transition: 'opacity 0.3s ease, transform 0.3s ease',
-                          }}>
-                            <p style={{
-                              fontFamily: "'Inter', sans-serif",
-                              fontSize: 11, fontWeight: 500,
-                              color: '#fff',
-                              letterSpacing: '0.05em',
-                              margin: 0,
-                            }}>
-                              {item.title}
-                            </p>
-                          </div>
-                        )}
                       </Tag>
                     );
                   })

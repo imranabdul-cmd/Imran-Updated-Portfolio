@@ -11,6 +11,7 @@ import { TechStack }      from './components/TechStack';
 import { Certificates }   from './components/Certificates';
 import { ContactFooter }  from './components/ContactFooter';
 import { InteractiveCore } from './components/InteractiveCore';
+import { Navbar }          from './components/Navbar';
 import { CustomCursor }   from './components/CustomCursor';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -60,6 +61,9 @@ export const App: React.FC = () => {
   return (
     <div style={{ minHeight: '100vh', background: '#030712', color: '#fff', position: 'relative' }}>
       <CustomCursor />
+
+      {/* Global Liquid Glass Floating Navigation */}
+      <Navbar isUnlocked={isUnlocked} />
 
       {/* Fixed ambient 3D BG — z-index 1, behind all page content */}
       <InteractiveCore />

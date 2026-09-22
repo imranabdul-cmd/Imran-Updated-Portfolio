@@ -1,168 +1,328 @@
-import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Menu, X, Cpu, Terminal, ExternalLink } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { sounds } from '../utils/audio';
 
-export const Navbar: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [audioEnabled, setAudioEnabled] = useState(true);
+interface NavbarProps {
+  isUnlocked?: boolean;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ isUnlocked = true }) => {
+  const [activeSection, setActiveSection] = useState<string>('');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [time, setTime] = useState('');
+  const isClickScrollingRef = useRef(false);
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Track active section on scroll using viewport bounding rects
   useEffect(() => {
+    if (!isUnlocked) return;
+
+    const sections = ['about', 'projects', 'tech', 'certificates', 'contact'];
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+      // Don't override highlight while smooth scrolling after a user click
+      if (isClickScrollingRef.current) return;
+
+      const viewportTargetY = window.innerHeight * 0.35;
+
+      for (const sectionId of sections) {
+        const el = document.getElementById(sectionId);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= viewportTargetY && rect.bottom >= viewportTargetY) {
+            setActiveSection(sectionId);
+            return;
+          }
+        }
+      }
+
+      if (window.scrollY < 300) {
+        setActiveSection('');
+      }
     };
 
-    const updateClock = () => {
-      const now = new Date();
-      setTime(now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' }));
-    };
-
-    updateClock();
-    const timer = setInterval(updateClock, 1000);
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      clearInterval(timer);
+      if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
     };
-  }, []);
+  }, [isUnlocked]);
 
-  const handleAudioToggle = () => {
-    const state = sounds.toggle();
-    setAudioEnabled(state);
+  if (!isUnlocked) return null;
+
+  const scrollToSection = (e: React.MouseEvent, targetId: string) => {
+    e.preventDefault();
+    sounds.playClick();
+    setMobileMenuOpen(false);
+
+    if (targetId === 'home') {
+      setActiveSection('');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // Instantly highlight clicked section
+    setActiveSection(targetId);
+
+    // Lock scroll listener updates during smooth scroll animation (~900ms)
+    isClickScrollingRef.current = true;
+    if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
+    clickTimerRef.current = setTimeout(() => {
+      isClickScrollingRef.current = false;
+    }, 950);
+
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const navLinks = [
-    { name: '// 01. ABOUT', href: '#about' },
-    { name: '// 02. EXPERIENCE', href: '#experience' },
-    { name: '// 03. PROJECTS', href: '#projects' },
-    { name: '// 04. TECH STACK', href: '#tech' },
-    { name: '// 05. CERTIFICATES', href: '#certificates' },
-    { name: '// 06. CONTACT', href: '#contact' },
+    { label: 'About', id: 'about' },
+    { label: 'Work', id: 'projects' },
+    { label: 'Stack', id: 'tech' },
+    { label: 'Certs', id: 'certificates' },
+    { label: 'Contact', id: 'contact' },
   ];
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-[#030712]/85 backdrop-blur-xl border-b border-cyan-500/20 py-3 shadow-[0_4px_30px_rgba(0,0,0,0.8)]'
-          : 'bg-transparent py-5'
-      }`}
+      style={{
+        position: 'fixed',
+        top: 16,
+        left: 0,
+        right: 0,
+        zIndex: 99999,
+        display: 'flex',
+        justifyContent: 'center',
+        padding: '0 16px',
+        pointerEvents: 'none',
+      }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Brand & Telemetry */}
+      <div
+        className="liquid-glass"
+        style={{
+          pointerEvents: 'auto',
+          width: '100%',
+          maxWidth: 880,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '8px 18px',
+          borderRadius: 999,
+          boxShadow: '0 20px 50px rgba(0,0,0,0.8), inset 0 1px 2px rgba(255,255,255,0.25)',
+          background: 'rgba(3, 7, 18, 0.75)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          border: '1px solid rgba(255, 255, 255, 0.12)',
+        }}
+      >
+        {/* Logo */}
         <a
-          href="#"
+          href="#home"
+          onClick={(e) => scrollToSection(e, 'home')}
           onMouseEnter={() => sounds.playHover()}
-          onClick={() => sounds.playClick()}
-          className="flex items-center gap-3 group"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 10,
+            textDecoration: 'none',
+          }}
         >
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-lg bg-cyan-950/60 border border-cyan-500/40 text-cyan-400 group-hover:border-cyan-400 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.5)] transition-all">
-            <Cpu className="w-5 h-5 animate-pulse" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+          <div
+            style={{
+              width: 30,
+              height: 30,
+              borderRadius: '50%',
+              background: 'linear-gradient(135deg, #06b6d4, #a855f7)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontFamily: "'Inter', sans-serif",
+              fontSize: 13,
+              fontWeight: 700,
+              color: '#fff',
+              boxShadow: '0 0 14px rgba(6,182,212,0.5)',
+            }}
+          >
+            I
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-syne font-black text-lg tracking-wider text-white group-hover:text-cyan-400 transition-colors">
-                IMRAN<span className="text-cyan-400">.A</span>
-              </span>
-              <span className="text-[10px] font-mono-code px-1.5 py-0.5 rounded bg-cyan-950/80 border border-cyan-500/30 text-cyan-300">
-                AI / DEV
-              </span>
-            </div>
-            <div className="text-[10px] font-mono-code text-slate-400 flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>SYS_ACTIVE</span>
-              <span className="text-cyan-500/60">•</span>
-              <span className="text-cyan-300">{time} UTC</span>
-            </div>
-          </div>
+          <span
+            style={{
+              fontFamily: "'Instrument Serif', serif",
+              fontSize: '1.55rem',
+              color: '#fff',
+              letterSpacing: '-0.01em',
+            }}
+          >
+            Imran<span style={{ color: '#06b6d4' }}>.A</span>
+          </span>
         </a>
 
-        {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-6">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              onMouseEnter={() => sounds.playHover()}
-              onClick={() => sounds.playClick()}
-              className="text-xs font-mono-code text-slate-300 hover:text-cyan-400 tracking-wider transition-colors relative py-1 group"
-            >
-              {link.name}
-              <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-cyan-400 to-purple-500 group-hover:w-full transition-all duration-300" />
-            </a>
-          ))}
+        {/* Desktop Links */}
+        <nav className="hidden md:flex" style={{ gap: 6, alignItems: 'center' }}>
+          {navLinks.map(({ label, id }) => {
+            const isActive = activeSection === id;
+            return (
+              <a
+                key={id}
+                href={`#${id}`}
+                onClick={(e) => scrollToSection(e, id)}
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: '13px',
+                  fontWeight: isActive ? 600 : 500,
+                  color: isActive ? '#ffffff' : 'rgba(255,255,255,0.7)',
+                  textDecoration: 'none',
+                  letterSpacing: '0.02em',
+                  padding: '6px 14px',
+                  borderRadius: 999,
+                  background: isActive ? 'rgba(6, 182, 212, 0.2)' : 'transparent',
+                  border: isActive ? '1px solid rgba(6, 182, 212, 0.4)' : '1px solid transparent',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  boxShadow: isActive ? '0 0 12px rgba(6,182,212,0.25)' : 'none',
+                }}
+                onMouseEnter={e => {
+                  sounds.playHover();
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.color = '#fff';
+                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.08)';
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLElement).style.color = 'rgba(255,255,255,0.7)';
+                    (e.currentTarget as HTMLElement).style.background = 'transparent';
+                  }
+                }}
+              >
+                {label}
+              </a>
+            );
+          })}
         </nav>
 
-        {/* Right Action Tools */}
-        <div className="flex items-center gap-3">
-          {/* Audio FX Toggle */}
-          <button
-            onClick={handleAudioToggle}
-            onMouseEnter={() => sounds.playHover()}
-            title={audioEnabled ? 'Mute Interface Sound' : 'Enable Interface Sound'}
-            className={`p-2 rounded-lg border transition-all ${
-              audioEnabled
-                ? 'bg-cyan-950/50 border-cyan-500/40 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.25)]'
-                : 'bg-slate-900/50 border-slate-700 text-slate-500 hover:text-slate-300'
-            }`}
-          >
-            {audioEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-          </button>
-
-          {/* Quick Terminal CTA */}
+        {/* CTA & Mobile Trigger */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <a
-            href="#contact"
+            href="https://www.linkedin.com/in/imran-aupe"
+            target="_blank"
+            rel="noreferrer"
             onMouseEnter={() => sounds.playHover()}
             onClick={() => sounds.playClick()}
-            className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-mono-code font-bold text-xs tracking-wider transition-all shadow-[0_0_20px_rgba(6,182,212,0.4)] hover:shadow-[0_0_25px_rgba(6,182,212,0.7)] hover:scale-105"
+            className="hidden sm:inline-flex"
+            style={{
+              padding: '7px 18px',
+              borderRadius: 999,
+              fontSize: '12px',
+              fontWeight: 600,
+              color: '#fff',
+              textDecoration: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+              transition: 'all 0.2s ease',
+            }}
           >
-            <Terminal className="w-3.5 h-3.5" />
-            <span>INITIATE_CONTACT</span>
+            Let's Connect <ArrowUpRight size={13} style={{ color: '#06b6d4' }} />
           </a>
 
-          {/* Mobile Menu Trigger */}
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-300 hover:text-cyan-400"
+            onClick={() => {
+              sounds.playClick();
+              setMobileMenuOpen(!mobileMenuOpen);
+            }}
+            className="md:hidden"
+            style={{
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+              borderRadius: '50%',
+              width: 34,
+              height: 34,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#fff',
+              cursor: 'pointer',
+            }}
           >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileMenuOpen ? <X size={16} /> : <Menu size={16} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#030712]/95 border-b border-cyan-500/30 px-6 py-6 space-y-4 backdrop-blur-2xl">
-          {navLinks.map((link) => (
+        <div
+          style={{
+            position: 'absolute',
+            top: 60,
+            left: 16,
+            right: 16,
+            pointerEvents: 'auto',
+            background: 'rgba(3, 7, 18, 0.95)',
+            backdropFilter: 'blur(25px)',
+            WebkitBackdropFilter: 'blur(25px)',
+            borderRadius: 20,
+            border: '1px solid rgba(6, 182, 212, 0.3)',
+            padding: '20px 24px',
+            boxShadow: '0 30px 60px rgba(0,0,0,0.9)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 12,
+            animation: 'fade-up 0.25s ease',
+          }}
+        >
+          {navLinks.map(({ label, id }) => (
             <a
-              key={link.name}
-              href={link.href}
-              onClick={() => {
-                sounds.playClick();
-                setMobileMenuOpen(false);
+              key={id}
+              href={`#${id}`}
+              onClick={(e) => scrollToSection(e, id)}
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: '14px',
+                fontWeight: 500,
+                color: activeSection === id ? '#06b6d4' : 'rgba(255,255,255,0.85)',
+                textDecoration: 'none',
+                padding: '10px 14px',
+                borderRadius: 10,
+                background: activeSection === id ? 'rgba(6,182,212,0.15)' : 'transparent',
               }}
-              className="block font-mono-code text-sm text-slate-300 hover:text-cyan-400 tracking-wider py-2 border-b border-slate-800"
             >
-              {link.name}
+              {label}
             </a>
           ))}
-          <div className="pt-2 flex items-center justify-between">
-            <span className="text-xs font-mono-code text-slate-400">PORTAL STATUS: ONLINE</span>
-            <a
-              href="https://github.com/imranabdul-cmd"
-              target="_blank"
-              rel="noreferrer"
-              className="text-xs font-mono-code text-cyan-400 flex items-center gap-1"
-            >
-              <span>GITHUB</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
+
+          <a
+            href="https://www.linkedin.com/in/imran-aupe"
+            target="_blank"
+            rel="noreferrer"
+            style={{
+              marginTop: 6,
+              padding: '12px 18px',
+              borderRadius: 12,
+              fontSize: '13px',
+              fontWeight: 600,
+              color: '#fff',
+              textAlign: 'center',
+              textDecoration: 'none',
+              background: 'linear-gradient(135deg, #06b6d4, #a855f7)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+            }}
+          >
+            Let's Connect <ArrowUpRight size={15} />
+          </a>
         </div>
       )}
     </header>
   );
 };
+
+export default Navbar;

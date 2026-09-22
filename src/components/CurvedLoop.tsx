@@ -22,7 +22,7 @@ const CurvedLoop: FC<CurvedLoopProps> = ({
     return (hasTrailing ? marqueeText.replace(/\s+$/, '') : marqueeText) + '\u00A0';
   }, [marqueeText]);
 
-  const measureRef  = useRef<SVGTextElement | null>(null);
+  const measureRef  = useRef<SVGTextPathElement | null>(null);
   const textPathRef = useRef<SVGTextPathElement | null>(null);
   const pathRef     = useRef<SVGPathElement | null>(null);
   const [spacing, setSpacing] = useState(0);

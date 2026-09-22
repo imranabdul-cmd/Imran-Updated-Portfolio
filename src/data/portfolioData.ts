@@ -344,6 +344,78 @@ export const PORTFOLIO_DATA = {
       image: "/assets/certificates/internship_certificate.png",
       category: "Software & .NET",
       skills: ["Full Stack Development", "Team Collaboration", "Agile", "Production Code"]
+    },
+    {
+      id: "executive-presence",
+      title: "Executive Presence & Professional Influence",
+      issuer: "LinkedIn Learning Certification",
+      image: "/assets/certificates/executive_presence_shade_zahrai.png",
+      category: "Professional Leadership",
+      skills: ["Executive Presence", "Body Language", "Confidence", "Communication"]
+    },
+    {
+      id: "building-courage",
+      title: "Building Workplace Courage & Voice",
+      issuer: "LinkedIn Learning Certification",
+      image: "/assets/certificates/building_courage_speak_up.png",
+      category: "Professional Leadership",
+      skills: ["Communication", "Workplace Voice", "Assertiveness", "Leadership"]
+    },
+    {
+      id: "confident-performance",
+      title: "High-Stakes Confident Performance",
+      issuer: "LinkedIn Learning Certification",
+      image: "/assets/certificates/confident_performance.png",
+      category: "Professional Leadership",
+      skills: ["High-Stakes Execution", "Focus", "Performance Excellence", "Mindset"]
+    },
+    {
+      id: "finding-strengths",
+      title: "Discovering & Leveraging Core Strengths",
+      issuer: "LinkedIn Learning Certification",
+      image: "/assets/certificates/finding_using_strengths.png",
+      category: "Professional Leadership",
+      skills: ["Self-Awareness", "Strengths Optimization", "Career Development", "Growth"]
+    },
+    {
+      id: "prioritize-needs",
+      title: "Workplace Prioritization & Needs Expression",
+      issuer: "LinkedIn Learning Certification",
+      image: "/assets/certificates/prioritize_express_needs.png",
+      category: "Professional Leadership",
+      skills: ["Time Management", "Prioritization", "Effective Communication", "Workplace Dynamics"]
+    },
+    {
+      id: "managing-burnout",
+      title: "Workplace Resilience & Burnout Management",
+      issuer: "LinkedIn Learning Certification",
+      image: "/assets/certificates/managing_burnout.png",
+      category: "Professional Leadership",
+      skills: ["Stress Management", "Resilience", "Workplace Wellness", "Productivity"]
+    },
+    {
+      id: "activating-courage",
+      title: "Activating Courage for Career Success",
+      issuer: "LinkedIn Learning Certification",
+      image: "/assets/certificates/activating_workplace_courage.png",
+      category: "Professional Leadership",
+      skills: ["Workplace Success", "Personal Development", "Courage", "Career Strategy"]
+    },
+    {
+      id: "ownership-empowerment",
+      title: "Workplace Ownership & Power Strategies",
+      issuer: "LinkedIn Learning Certification",
+      image: "/assets/certificates/ownership_empowerment_work.png",
+      category: "Professional Leadership",
+      skills: ["Ownership", "Workplace Leadership", "Empowerment", "Career Leadership"]
+    },
+    {
+      id: "staying-positive",
+      title: "Perseverance & Growth Mindset Under Pressure",
+      issuer: "LinkedIn Learning Certification",
+      image: "/assets/certificates/staying_positive_persevering.png",
+      category: "Professional Leadership",
+      skills: ["Growth Mindset", "Perseverance", "Adaptability", "Positive Psychology"]
     }
   ] as CertificateItem[]
 };

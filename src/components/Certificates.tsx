@@ -12,9 +12,10 @@ const sans  = { fontFamily: "'Inter', sans-serif" }       as const;
 const serif = { fontFamily: "'Instrument Serif', serif" } as const;
 
 const CAT_COLOR: Record<string, string> = {
-  'AI & Data Science': 'var(--cyan)',
-  'Software & .NET':   'var(--purple)',
-  'Cloud & Security':  'var(--emerald)',
+  'AI & Data Science':       'var(--cyan)',
+  'Software & .NET':         'var(--purple)',
+  'Cloud & Security':        'var(--emerald)',
+  'Professional Leadership': 'var(--amber)',
 };
 
 export const Certificates: React.FC = () => {
@@ -97,7 +98,7 @@ export const Certificates: React.FC = () => {
             >
               <Award size={12} />
               <span style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-                9+ Industry Certifications
+                18+ Industry & Leadership Certifications
               </span>
             </div>
             <h2
@@ -120,22 +121,22 @@ export const Certificates: React.FC = () => {
         <DriftWall
           items={driftItems}
           columns={5}
-          tileWidth={220}
-          tileHeight={152}
-          gap={16}
-          tilt={14}
-          turn={-12}
+          tileWidth={250}
+          tileHeight={172}
+          gap={18}
+          tilt={12}
+          turn={-10}
           perspective={1200}
           depth={110}
           speed={36}
           direction="up"
           variance={0.42}
           parallax={0.6}
-          lift={60}
-          fade={0.55}
-          dim={0.45}
-          overlayColor="#030712"
-          radius={14}
+          lift={50}
+          fade={0.85}
+          dim={0.15}
+          overlayColor="rgba(3, 7, 18, 0.35)"
+          radius={12}
           roll={0}
           pauseOnHover={true}
           grayscale={false}
@@ -229,16 +230,17 @@ interface ClickOverlayProps {
 
 const ClickOverlay: React.FC<ClickOverlayProps> = ({ certs, onSelect }) => {
   const CAT_COLOR_LOCAL: Record<string, string> = {
-    'AI & Data Science': '#06b6d4',
-    'Software & .NET':   '#a855f7',
-    'Cloud & Security':  '#34d399',
+    'AI & Data Science':       '#06b6d4',
+    'Software & .NET':         '#a855f7',
+    'Cloud & Security':        '#34d399',
+    'Professional Leadership': '#fbbf24',
   };
 
   return (
     <div style={{
       position: 'absolute', bottom: 0, left: 0, right: 0, zIndex: 15,
-      background: 'linear-gradient(to top, rgba(3,7,18,0.98) 0%, rgba(3,7,18,0.75) 75%, transparent 100%)',
-      padding: '36px 24px 24px',
+      background: 'linear-gradient(to top, rgba(3,7,18,0.95) 0%, rgba(3,7,18,0.3) 45%, transparent 100%)',
+      padding: '16px 24px 14px',
       display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10,
     }}>
       {certs.map(cert => {
